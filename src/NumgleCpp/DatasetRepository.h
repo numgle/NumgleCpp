@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
+#include <crow.h>
 #include <cstdint>
-#include <string>
-#include <mutex>
 #include <httplib.h>
 #include <iostream>
-#include <crow.h>
+#include <mutex>
+#include <string>
+#include <vector>
 
 using ConvertTable1D = std::vector<std::string>;
 using ConvertTable2D = std::vector<std::vector<std::string>>;
@@ -25,7 +25,8 @@ struct ConvertTables {
 
 class DatasetRepository {
 public:
-    [[nodiscard]] virtual const ConvertTables& getConvertTables() const noexcept = 0;
+    [[nodiscard]] virtual const ConvertTables &
+    getConvertTables() const noexcept = 0;
     virtual void update() = 0;
 };
 
@@ -33,11 +34,13 @@ constexpr static uint32_t UPDATE_INTERVAL = 3600;
 
 class WebDatasetRepository : public DatasetRepository {
 public:
-    WebDatasetRepository(const std::string& url, const std::string& path) : cli(url), path(path) {
+    WebDatasetRepository(const std::string &url, const std::string &path)
+        : cli(url)
+        , path(path) {
         update();
     }
 
-    const ConvertTables& getConvertTables() const noexcept override {
+    const ConvertTables &getConvertTables() const noexcept override {
         auto lock = std::unique_lock(mutex);
         return cached;
     }
@@ -59,7 +62,8 @@ private:
             return;
         }
 
-        const auto load1DTable = [&](const crow::json::rvalue& json, ConvertTable1D& table) {
+        const auto load1DTable = [&](const crow::json::rvalue &json,
+                                     ConvertTable1D &table) {
             table.clear();
             table.resize(json.size());
             for (size_t i = 0; i < json.size(); ++i) {
@@ -67,7 +71,8 @@ private:
             }
         };
 
-        const auto load2DTable = [&](const crow::json::rvalue& json, ConvertTable2D& table) {
+        const auto load2DTable = [&](const crow::json::rvalue &json,
+                                     ConvertTable2D &table) {
             table.clear();
             table.resize(json.size());
             for (size_t i = 0; i < json.size(); ++i) {
@@ -80,11 +85,10 @@ private:
         load1DTable(json["jung"], cached.jungTable);
         load2DTable(json["cj"], cached.cjTable);
         load1DTable(json["han"], cached.hanTable);
-        //load1DTable(json["eng"], cached.engUpperTable);
+        // load1DTable(json["eng"], cached.engUpperTable);
         load1DTable(json["number"], cached.numberTable);
         load1DTable(json["special"], cached.specialTable);
     }
-
 
     ConvertTables cached;
     std::string path;

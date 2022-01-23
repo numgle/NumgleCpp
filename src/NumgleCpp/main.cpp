@@ -1,17 +1,21 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
-#include <httplib.h>
 #include <crow.h>
-#include <unordered_map>
+#include <httplib.h>
 
 #include <sstream>
+#include <unordered_map>
+
 #include "NumgleApp.h"
 #include "UTF8Decoder.h"
 
 int main() {
-    NumgleApp app(std::make_unique< WebDatasetRepository>("https://raw.githubusercontent.com", "/numgle/dataset/main/src/data.json"));
+    NumgleApp app(std::make_unique<WebDatasetRepository>(
+        "https://raw.githubusercontent.com",
+        "/numgle/dataset/main/src/data.json"));
     crow::SimpleApp api;
 
-    CROW_ROUTE(api, "/<str>")([&](const std::string& str) {
+    CROW_ROUTE(api, "/<str>")
+    ([&](const std::string &str) {
         crow::response response{};
         try {
             std::string uriDecoded = uriDecode(str);
