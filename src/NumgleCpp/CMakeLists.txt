@@ -1,4 +1,7 @@
 set(SOURCE_LIST
+    NumgleApp.h
+    DatasetRepository.h
+    UTF8Decoder.h
     main.cpp
 )
 
