@@ -25,8 +25,7 @@ struct ConvertTables {
 
 class DatasetRepository {
 public:
-    [[nodiscard]] virtual const ConvertTables &
-    getConvertTables() const noexcept = 0;
+    [[nodiscard]] virtual const ConvertTables &getConvertTables() const noexcept = 0;
     virtual void update() = 0;
 };
 
