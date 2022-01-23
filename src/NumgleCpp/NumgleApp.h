@@ -13,7 +13,7 @@ public:
     NumgleApp(std::unique_ptr<DatasetRepository> repo)
         : repo(std::move(repo)) {}
 
-    std::string convertToNumgle(const std::vector<uint32_t> input) {
+    std::string convertToNumgle(const std::vector<uint32_t>& input) {
         std::ostringstream ss{};
         const ConvertTables &tables = repo->getConvertTables();
         for (auto &code : input) {
