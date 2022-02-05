@@ -1,0 +1,7 @@
+Dockerfile
+.dockerignore
+.clang-format
+.gitignore
+.gitmodules
+format.bat
+README.md
