@@ -56,6 +56,12 @@ private:
         case LetterType::SpecialLetter:
             stream << tables.specialTable.at(SPECIAL_CHARATERS.at(code));
             break;
+        case LetterType::EnglishLower:
+            stream << tables.engLowerTable.at(code - 97);
+            break;
+        case LetterType::EnglishUpper:
+            stream << tables.engUpperTable.at(code - 65);
+            break;
         }
     }
 

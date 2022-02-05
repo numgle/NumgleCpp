@@ -11,6 +11,11 @@
 using ConvertTable1D = std::vector<std::string>;
 using ConvertTable2D = std::vector<std::vector<std::string>>;
 
+struct Range {
+    uint32_t start;
+    uint32_t end;
+};
+
 struct ConvertTables {
     ConvertTable1D choTable;
     ConvertTable1D jongTable;
@@ -21,6 +26,7 @@ struct ConvertTables {
     ConvertTable1D engLowerTable;
     ConvertTable1D numberTable;
     ConvertTable1D specialTable;
+    std::vector<uint32_t> specials;
 };
 
 class DatasetRepository {
@@ -36,6 +42,7 @@ public:
     WebDatasetRepository(const std::string &url, const std::string &path)
         : cli(url)
         , path(path) {
+        cli.enable_server_certificate_verification(false);
         update();
     }
 
@@ -56,6 +63,9 @@ public:
 private:
     void fetch() {
         auto res = cli.Get("/numgle/dataset/main/src/data.json");
+        if (!res) {
+            return;
+        }
         if (res->status != 200) {
             std::cout << "Error while fetching from online" << std::endl;
             return;
@@ -84,7 +94,8 @@ private:
         load1DTable(json["jung"], cached.jungTable);
         load2DTable(json["cj"], cached.cjTable);
         load1DTable(json["han"], cached.hanTable);
-        // load1DTable(json["eng"], cached.engUpperTable);
+        load1DTable(json["englishUpper"], cached.engUpperTable);
+        load1DTable(json["englishLower"], cached.engLowerTable);
         load1DTable(json["number"], cached.numberTable);
         load1DTable(json["special"], cached.specialTable);
     }
